@@ -1,0 +1,363 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Training2026 | Web Technologies</title>
+  <script type="module" src="https://cdn.jsdelivr.net/npm/@google/model-viewer/dist/model-viewer.min.js"></script>
+  <style>
+    :root { --red:#a50713; --red-dark:#78040c; --footer-h:44px; --line:#eee7e7; }
+    * { box-sizing:border-box; }
+    html { scroll-behavior:smooth; }
+    body { margin:0; padding-bottom:var(--footer-h); background:#fff; color:#25262b; font:15px/1.65 system-ui,-apple-system,"Segoe UI",Arial,sans-serif; }
+    button, a { -webkit-tap-highlight-color:transparent; }
+    button { font:inherit; cursor:pointer; }
+    a { color:inherit; }
+    .navbar { display:flex; justify-content:space-between; align-items:flex-start; flex-wrap:wrap; gap:16px 24px; min-height:64px; padding:15px clamp(18px,3vw,40px); background:linear-gradient(100deg,var(--red-dark),var(--red)); color:white; box-shadow:0 3px 10px #42000630; }
+    .brand { font-size:17px; font-weight:750; letter-spacing:.1px; line-height:1.7; }
+    .brand::before { content:'◈'; margin-inline-end:9px; font-size:19px; }
+    #updates { margin:5px 0 0; padding-inline-start:31px; list-style:none; font-size:13px; font-weight:450; line-height:1.9; letter-spacing:0; }
+    #updates li::before { content:'↳'; margin-inline-end:9px; opacity:.65; }
+    .actions { display:flex; flex-wrap:wrap; align-items:center; gap:clamp(10px,2.5vw,29px); min-height:32px; }
+    .actions button { border:0; background:none; color:#fff; padding:5px 2px; font-size:13px; font-weight:600; opacity:.91; }
+    .actions button:hover { opacity:1; text-decoration:underline; text-underline-offset:6px; }
+    .actions button:focus-visible, .plus:focus-visible, .menu a:focus-visible { outline:2px solid currentColor; outline-offset:4px; }
+    .layout { display:grid; grid-template-columns:clamp(135px,16vw,210px) minmax(0,1fr); direction:ltr; min-height:calc(100vh - var(--footer-h) - 64px); }
+    .menu { border-inline-end:1px solid var(--line); background:#fcfcfd; padding:16px 10px; }
+    .menu nav { position:sticky; top:14px; display:grid; gap:3px; }
+    .menu a { display:flex; align-items:center; gap:10px; padding:8px 12px; border-radius:8px; color:#69717e; text-decoration:none; font-size:13px; transition:background .2s,color .2s; }
+    .menu a > span:first-child { flex:none; width:19px; text-align:center; font-size:15px; color:#b31d2b; }
+    .menu a:hover, .menu a.active { background:#fff0f1; color:#940615; }
+    .content { min-width:0; }
+    html[dir="rtl"] .content, html[dir="rtl"] .menu nav { direction:rtl; }
+    .media-grid { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); direction:ltr; }
+    .media-grid figure { position:relative; margin:0; min-width:0; height:clamp(270px,33vw,390px); overflow:hidden; }
+    .heart-panel { display:grid; place-items:center; background:radial-gradient(circle at 50% 48%,#fff 28%,#f8f6f5 100%); }
+    model-viewer, #localHeart { position:absolute; inset:0; display:block; width:100%; height:100%; background:transparent; --poster-color:transparent; }
+    model-viewer { visibility:hidden; }
+    model-viewer.ready { visibility:visible; }
+    #localHeart { cursor:grab; touch-action:none; }
+    #localHeart[hidden], #heartPoster[hidden] { display:none; }
+    #heartPoster { font-size:110px; line-height:1; }
+    .viewer-hint { position:absolute; bottom:12px; left:50%; transform:translateX(-50%); white-space:nowrap; padding:5px 10px; background:#ffffffd9; border:1px solid #f3eeee; border-radius:20px; color:#70696b; font-size:11px; text-align:center; pointer-events:none; }
+
+    .animation-panel { isolation:isolate; container-type:inline-size; background:radial-gradient(circle at 80% 10%,#d8202d 0%,#aa0614 40%,#780009 100%); }
+    .animation-panel figcaption { position:absolute; z-index:2; top:50%; left:50%; transform:translate(-50%,-50%); color:#fff; font-size:clamp(17px,2.2vw,27px); font-weight:750; white-space:nowrap; text-shadow:0 3px 9px #41000880; pointer-events:none; }
+    .shape { position:absolute; left:100%; width:var(--size); height:var(--size); top:var(--top); border:2px solid #ffffff4c; border-radius:0 24% 0 24%; background:#ffffff18; opacity:.9; animation:drift var(--speed) linear infinite; animation-delay:var(--delay); }
+    .shape:nth-of-type(even) { background:#ffd5d54a; border-color:#ffffff12; }
+    .shape:nth-of-type(3n) { background:transparent; border-color:#fff9; }
+    @keyframes drift { to { transform:translateX(calc(-100cqw - 180px)); } }
+    .article { padding:clamp(22px,3.3vw,44px); max-width:1100px; }
+    .article h1 { margin:0 0 4px; color:#242529; font-size:clamp(22px,2.3vw,31px); line-height:1.25; }
+    .intro { margin:0 0 26px; color:#707079; }
+    .topic { margin:0 0 24px; scroll-margin-top:20px; }
+    .topic h2 { margin:0 0 9px; font-size:16px; }
+    .topic-row { display:flex; align-items:center; gap:18px; }
+    .topic-row p { margin:0; color:#646875; font-size:14px; }
+    .topic-icon { display:grid; flex:none; place-items:center; width:64px; height:64px; border-radius:9px; color:white; font-size:15px; font-weight:800; box-shadow:0 4px 11px #00000015; }
+    .html-icon { background:linear-gradient(150deg,#ff6438,#d92d19); }
+    .css-icon { background:linear-gradient(150deg,#377ef3,#184bc6); }
+    .js-icon { background:linear-gradient(150deg,#f9cf48,#e9a52e); color:#383123; }
+    .article .closing { max-width:930px; margin:6px 0 24px; color:#666872; text-align:start; }
+    .footer { position:fixed; z-index:5; bottom:0; inset-inline:0; display:flex; align-items:center; justify-content:center; min-height:var(--footer-h); padding:6px 70px; border-top:1px solid #e9e5e5; background:#fffefef5; backdrop-filter:blur(8px); color:#77737a; font-size:11px; text-align:center; }
+    .footer a { color:#8e1a26; }
+    .plus { position:fixed; z-index:6; right:clamp(16px,2.6vw,38px); bottom:calc(var(--footer-h) - 20px); display:grid; place-items:center; width:48px; height:48px; padding:0; border:2px solid #fff; border-radius:50%; background:var(--red); color:#fff; font-size:29px; font-weight:300; line-height:1; box-shadow:0 5px 17px #3c000042; transition:transform .2s,background .2s,box-shadow .2s; }
+    .plus:hover { background:#cf1829; transform:translateY(-4px) scale(1.08); box-shadow:0 9px 23px #55000060; }
+    @media (max-width:800px) {
+      .layout { grid-template-columns:clamp(100px,22vw,155px) minmax(0,1fr); }
+      .menu { padding:9px 5px; border-right:1px solid var(--line); }
+      .menu nav { display:grid; gap:3px; }
+      .menu a { padding:7px 5px; gap:5px; font-size:12px; overflow-wrap:anywhere; }
+      .menu a > span:first-child { width:15px; font-size:13px; }
+      .media-grid figure { height:clamp(240px,43vw,330px); }
+    }
+    @media (max-width:540px) {
+      .navbar { padding:12px 16px; gap:5px 10px; }
+      .brand { font-size:16px; }
+      .actions { width:100%; gap:15px; justify-content:space-between; }
+      .actions button { font-size:12px; }
+      .media-grid { grid-template-columns:minmax(0,1fr); }
+      .media-grid figure { height:255px; }
+      .article { padding:20px 12px; }
+      .menu a {font-size:10px; gap:4px; padding:7px 3px;}
+      .menu a > span:first-child {width:13px;font-size:12px;}
+      .topic-row {align-items:flex-start;}
+      .topic-row p {font-size:12px;}
+      .topic-icon {width:40px !important;height:40px !important;font-size:12px;}
+      .viewer-hint {white-space:normal;width:max-content;max-width:95%;}
+      .topic-row { gap:12px; }
+      .topic-icon { width:54px; height:54px; }
+      .footer { font-size:10px; }
+      .plus { width:46px; height:46px; }
+    }
+    @media (prefers-reduced-motion:reduce) {
+      *,*::before,*::after { animation-duration:.01ms !important; transition-duration:.01ms !important; scroll-behavior:auto !important; }
+      .shape { left:var(--static-left); transform:none; }
+    }
+  </style>
+</head>
+<body>
+  <header class="navbar">
+    <div>
+      <strong class="brand">Training2026</strong>
+      <ol id="updates" aria-live="polite" aria-label="Updates"></ol>
+    </div>
+    <nav class="actions" aria-label="Page actions">
+      <button type="button" data-action="language" id="languageBtn">العربية</button>
+      <button type="button" data-action="add" data-i18n="add">+ Add Content</button>
+      <button type="button" data-action="clear" data-i18n="clear">× Clear Content</button>
+    </nav>
+  </header>
+
+  <main class="layout">
+    <aside class="menu" aria-label="Side menu">
+      <nav>
+        <a href="#overview" class="active"><span aria-hidden="true">◫</span><b data-i18n="dashboard">Dashboard</b></a>
+        <a href="#html"><span aria-hidden="true">⌘</span><span data-i18n="htmlEditor">HTML Editor</span></a>
+        <a href="#css"><span aria-hidden="true">◇</span><span data-i18n="cssEditor">CSS Editor</span></a>
+        <a href="#javascript"><span aria-hidden="true">✧</span><span data-i18n="jsEditor">JS Editor</span></a>
+        <a href="#overview"><span aria-hidden="true">▦</span><span data-i18n="components">Components</span></a>
+        <a href="#overview"><span aria-hidden="true">▤</span><span data-i18n="templates">Templates</span></a>
+        <a href="#overview"><span aria-hidden="true">☷</span><span data-i18n="snippets">Snippets</span></a>
+        <a href="#overview"><span aria-hidden="true">▧</span><span data-i18n="projects">Projects</span></a>
+        <a href="#overview"><span aria-hidden="true">◉</span><span data-i18n="uiPatterns">UI Patterns</span></a>
+        <a href="#overview"><span aria-hidden="true">◫</span><span data-i18n="responsive">Responsive Design</span></a>
+        <a href="#overview"><span aria-hidden="true">✿</span><span data-i18n="colors">Color Palettes</span></a>
+        <a href="#overview"><span aria-hidden="true">Aa</span><span data-i18n="typography">Typography</span></a>
+        <a href="#overview"><span aria-hidden="true">◌</span><span data-i18n="animations">Animations</span></a>
+        <a href="#overview"><span aria-hidden="true">⚙</span><span data-i18n="settings">Settings</span></a>
+      </nav>
+    </aside>
+
+    <section class="content" aria-label="Main content">
+      <section class="media-grid" aria-label="Interactive demos">
+        <figure class="heart-panel">
+          <canvas id="localHeart" tabindex="0" aria-label="Interactive 3D anatomical-style heart"></canvas>
+          <span id="heartPoster" hidden role="img" aria-label="Human heart">🫀</span>
+          <model-viewer id="heart" src="https://raw.githubusercontent.com/organui/heart-3d/main/public/models/heart.glb"
+                        alt="3D anatomical human heart" camera-controls touch-action="pan-y"
+                        camera-orbit="25deg 75deg auto" field-of-view="30deg"
+                        environment-image="neutral" shadow-intensity="0.7" exposure="1.15"
+                        interaction-prompt="none" loading="eager"></model-viewer>
+          <figcaption class="viewer-hint" data-i18n="heartHint">Drag to rotate • Scroll to zoom</figcaption>
+
+        </figure>
+        <figure class="animation-panel">
+          <span class="shape" style="--size:85px;--top:12%;--speed:14s;--delay:-4s;--static-left:8%"></span>
+          <span class="shape" style="--size:128px;--top:48%;--speed:18s;--delay:-13s;--static-left:62%"></span>
+          <span class="shape" style="--size:55px;--top:17%;--speed:11s;--delay:-8s;--static-left:82%"></span>
+          <span class="shape" style="--size:108px;--top:66%;--speed:16s;--delay:-9s;--static-left:25%"></span>
+          <span class="shape" style="--size:68px;--top:73%;--speed:13s;--delay:-2s;--static-left:74%"></span>
+          <span class="shape" style="--size:142px;--top:-13%;--speed:21s;--delay:-16s;--static-left:43%"></span>
+          <span class="shape" style="--size:46px;--top:39%;--speed:12s;--delay:-6s;--static-left:18%"></span>
+          <span class="shape" style="--size:91px;--top:27%;--speed:19s;--delay:-11s;--static-left:51%"></span>
+          <figcaption data-i18n="animationTitle">CSS Animation</figcaption>
+        </figure>
+      </section>
+
+      <article class="article" id="overview">
+        <h1 data-i18n="heading">HTML, CSS &amp; JavaScript</h1>
+        <p class="intro" data-i18n="intro">The web is built with three complementary technologies. Each plays a distinct role, and together they create the pages and interactions we use every day.</p>
+
+        <section class="topic" id="html">
+          <h2>HTML</h2>
+          <div class="topic-row">
+            <span class="topic-icon html-icon" aria-hidden="true">HTML</span>
+            <p data-i18n="htmlText">HTML (HyperText Markup Language) provides the structure of a web page. Headings, paragraphs, lists, images, forms, and links are organized into meaningful elements that browsers can display.</p>
+          </div>
+        </section>
+        <section class="topic" id="css">
+          <h2>CSS</h2>
+          <div class="topic-row">
+            <span class="topic-icon css-icon" aria-hidden="true">CSS</span>
+            <p data-i18n="cssText">CSS (Cascading Style Sheets) controls presentation: layout, colors, spacing, typography, and responsiveness. It is also used to create smooth transitions and animations.</p>
+          </div>
+        </section>
+        <section class="topic" id="javascript">
+          <h2>JavaScript</h2>
+          <div class="topic-row">
+            <span class="topic-icon js-icon" aria-hidden="true">JS</span>
+            <p data-i18n="jsText">JavaScript makes a page interactive. It listens for clicks, changes content, handles user input, and updates the interface without requiring a full page reload.</p>
+          </div>
+        </section>
+        <p class="closing" data-i18n="closing">Modern web development brings these technologies together to create fast, accessible, and adaptable experiences. A well-structured HTML document gives information meaning; thoughtful CSS makes it readable and visually engaging; and carefully written JavaScript adds useful interactions. Responsive layouts let the same page work on large monitors, tablets, and phones. Small details such as clear navigation, readable text, keyboard accessibility, consistent spacing, and meaningful feedback can significantly improve the experience. With reusable styles and simple code, a website can remain easy to understand, maintain, and extend as new features are introduced.</p>
+      </article>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <span>© 2026 Training2026 · <span data-i18n="credit">3D heart model:</span> <a href="https://github.com/organui/heart-3d" target="_blank" rel="noopener noreferrer">BodyParts3D / OrganUI</a> (CC BY 4.0, online model)</span>
+  </footer>
+  <button class="plus" type="button" data-action="add" aria-label="Add content" title="Add content">+</button>
+
+  <script>
+    const translations = {
+      en: {
+        add:'+ Add Content', clear:'× Clear Content', dashboard:'Dashboard', htmlEditor:'HTML Editor',
+        cssEditor:'CSS Editor', jsEditor:'JS Editor', components:'Components', templates:'Templates',
+        snippets:'Snippets', projects:'Projects', uiPatterns:'UI Patterns', responsive:'Responsive Design',
+        colors:'Color Palettes', typography:'Typography', animations:'Animations', settings:'Settings',
+        heartHint:'Drag to rotate • Scroll to zoom', heartError:'The 3D heart needs an internet connection to load.',
+        animationTitle:'CSS Animation', heading:'HTML, CSS & JavaScript',
+        intro:'The web is built with three complementary technologies. Each plays a distinct role, and together they create the pages and interactions we use every day.',
+        htmlText:'HTML (HyperText Markup Language) provides the structure of a web page. Headings, paragraphs, lists, images, forms, and links are organized into meaningful elements that browsers can display.',
+        cssText:'CSS (Cascading Style Sheets) controls presentation: layout, colors, spacing, typography, and responsiveness. It is also used to create smooth transitions and animations.',
+        jsText:'JavaScript makes a page interactive. It listens for clicks, changes content, handles user input, and updates the interface without requiring a full page reload.',
+        closing:'Modern web development brings these technologies together to create fast, accessible, and adaptable experiences. A well-structured HTML document gives information meaning; thoughtful CSS makes it readable and visually engaging; and carefully written JavaScript adds useful interactions. Responsive layouts let the same page work on large monitors, tablets, and phones. Small details such as clear navigation, readable text, keyboard accessibility, consistent spacing, and meaningful feedback can significantly improve the experience. With reusable styles and simple code, a website can remain easy to understand, maintain, and extend as new features are introduced.',
+        credit:'3D heart model:', update:'Update', language:'العربية', added:'Add content'
+      },
+      ar: {
+        add:'+ إضافة محتوى', clear:'× مسح المحتوى', dashboard:'لوحة التحكم', htmlEditor:'محرر HTML',
+        cssEditor:'محرر CSS', jsEditor:'محرر JavaScript', components:'المكوّنات', templates:'القوالب',
+        snippets:'مقاطع الأكواد', projects:'المشاريع', uiPatterns:'أنماط الواجهات', responsive:'التصميم المتجاوب',
+        colors:'لوحات الألوان', typography:'الخطوط', animations:'الحركات', settings:'الإعدادات',
+        heartHint:'اسحب لتدوير القلب • مرّر للتكبير', heartError:'يتطلّب عرض القلب ثلاثي الأبعاد اتصالًا بالإنترنت.',
+        animationTitle:'حركة CSS', heading:'HTML وCSS وJavaScript',
+        intro:'تُبنى صفحات الويب باستخدام ثلاث تقنيات متكاملة. لكل تقنية دور خاص، وتعمل جميعها معًا لإنشاء الصفحات والتفاعلات التي نستخدمها يوميًا.',
+        htmlText:'تُستخدم HTML لبناء هيكل صفحة الويب وتنظيم محتواها، مثل العناوين والفقرات والقوائم والصور والنماذج والروابط، ضمن عناصر يفهمها المتصفح.',
+        cssText:'تتحكم CSS في شكل الصفحة وتنسيقها، بما في ذلك الألوان والمسافات والخطوط وتوزيع العناصر والتصميم المتجاوب. كما تُستخدم لإنشاء الانتقالات والحركات.',
+        jsText:'تجعل JavaScript صفحات الويب تفاعلية؛ فهي تستجيب للنقرات وتعدّل المحتوى وتعالج مدخلات المستخدم وتُحدّث الواجهة دون إعادة تحميل الصفحة كاملة.',
+        closing:'يجمع تطوير الويب الحديث بين هذه التقنيات لإنشاء تجارب سريعة وسهلة الاستخدام وتتكيف مع مختلف الأجهزة. تمنح HTML المحتوى بنية واضحة ومعنى، وتجعل CSS المعلومات مقروءة وجذابة بصريًا، بينما تضيف JavaScript التفاعلات المفيدة. يضمن التصميم المتجاوب عمل الصفحة نفسها على شاشات الكمبيوتر الكبيرة والأجهزة اللوحية والهواتف. وتُحسّن التفاصيل الصغيرة، مثل سهولة التنقل ووضوح النصوص وإمكانية استخدام لوحة المفاتيح وتناسق المسافات والاستجابة لتصرفات المستخدم، تجربة التصفح بشكل كبير. وعندما تكون الأنماط قابلة لإعادة الاستخدام والأكواد بسيطة ومنظمة، يصبح تطوير الموقع وصيانته وإضافة ميزات جديدة إليه أسهل بكثير.',
+        credit:'نموذج القلب ثلاثي الأبعاد:', update:'تحديث', language:'English', added:'إضافة محتوى'
+      }
+    };
+    const updates = document.getElementById('updates');
+    let lang = 'en', count = 0;
+    function render() {
+      const t = translations[lang];
+      document.documentElement.lang = lang;
+      document.documentElement.dir = lang === 'ar' ? 'rtl' : 'ltr';
+      document.querySelectorAll('[data-i18n]').forEach(el => el.textContent = t[el.dataset.i18n]);
+      document.getElementById('languageBtn').textContent = t.language;
+      document.querySelector('.plus').setAttribute('aria-label',t.added);
+      document.querySelector('.plus').title = t.added;
+      [...updates.children].forEach((item,index) => item.textContent = `${t.update}${index + 1}`);
+    }
+    document.addEventListener('click', event => {
+      const action = event.target.closest('[data-action]')?.dataset.action;
+      if (action === 'add') {
+        const item = document.createElement('li');
+        item.textContent = `${translations[lang].update}${++count}`;
+        updates.append(item);
+      } else if (action === 'clear') {
+        updates.replaceChildren();
+        count = 0;
+      } else if (action === 'language') {
+        lang = lang === 'en' ? 'ar' : 'en';
+        render();
+      }
+    });
+    document.getElementById('heart').addEventListener('load', () => {
+      document.getElementById('heart').classList.add('ready');
+      document.getElementById('localHeart').hidden = true;
+      document.getElementById('heartPoster').hidden = true;
+    });
+    // Standalone 3D fallback: shaded anatomical-style meshes, no external library.
+    (() => {
+      const canvas = document.getElementById('localHeart');
+      const gl = canvas.getContext('webgl', {antialias:true, alpha:true});
+      const ctx = gl ? null : canvas.getContext('2d');
+      if (!gl && !ctx) { canvas.hidden = true; document.getElementById('heartPoster').hidden = false; return; }
+      let program;
+      const shader = (type, source) => {
+        const s = gl.createShader(type); gl.shaderSource(s, source); gl.compileShader(s);
+        if (!gl.getShaderParameter(s,gl.COMPILE_STATUS)) throw Error(gl.getShaderInfoLog(s)); return s;
+      };
+      if (gl) {
+      program = gl.createProgram();
+      gl.attachShader(program,shader(gl.VERTEX_SHADER,`attribute vec3 p,n,c; uniform vec2 rot,aspect; uniform float zoom; varying vec3 N,C,P;
+        vec3 turn(vec3 v){float a=cos(rot.x),b=sin(rot.x),d=cos(rot.y),e=sin(rot.y); v=vec3(a*v.x+b*v.z,v.y,-b*v.x+a*v.z); return vec3(v.x,d*v.y-e*v.z,e*v.y+d*v.z);}
+        void main(){vec3 q=turn(p); N=turn(n); C=c; P=p; gl_Position=vec4(q.xy*aspect*zoom,-q.z*.18,1.);}`));
+      gl.attachShader(program,shader(gl.FRAGMENT_SHADER,`precision mediump float; varying vec3 N,C,P;
+        void main(){vec3 n=normalize(N), l=normalize(vec3(-.55,.9,1.3)); float d=max(dot(n,l),0.); float spec=pow(max(dot(n,normalize(l+vec3(0.,0.,1.))),0.),24.); float grain=sin(P.x*91.+sin(P.y*37.)*3.)*sin(P.z*97.+P.y*53.); float fine=sin(P.y*170.+P.x*83.)*.025; vec3 color=C*(.50+.56*d+grain*.028+fine)+vec3(.30,.18,.15)*spec; gl_FragColor=vec4(color,1.);}`));
+      gl.linkProgram(program); if(!gl.getProgramParameter(program,gl.LINK_STATUS)) throw Error(gl.getProgramInfoLog(program)); gl.useProgram(program);
+      }
+      const add=(a,b)=>a.map((v,i)=>v+b[i]), sub=(a,b)=>a.map((v,i)=>v-b[i]), mul=(a,s)=>a.map(v=>v*s), cross=(a,b)=>[a[1]*b[2]-a[2]*b[1],a[2]*b[0]-a[0]*b[2],a[0]*b[1]-a[1]*b[0]], unit=a=>mul(a,1/(Math.hypot(...a)||1));
+      const vertices=[];
+      function surface(fn,color,rows=28,cols=36,reverse=false){
+        if(!gl){rows=Math.max(12,Math.round(rows*.48));cols=Math.max(12,Math.round(cols*.48));}
+        const get=(u,v)=>{const p=fn(u,v),du=sub(fn(u+.0002,v),fn(u-.0002,v)),dv=sub(fn(u,v+.0002),fn(u,v-.0002)); return [...p,...unit(reverse?cross(du,dv):cross(dv,du)),...color];};
+        for(let j=0;j<rows;j++)for(let i=0;i<cols;i++){
+          const a=get(j/rows,i/cols),b=get((j+1)/rows,i/cols),c=get(j/rows,(i+1)/cols),d=get((j+1)/rows,(i+1)/cols); vertices.push(...a,...b,...c,...b,...d,...c);
+        }
+      }
+      function lobe(center,radii,color,shape=0,tilt=0){
+        surface((u,v)=>{const t=.0001+u*(Math.PI-.0002),a=v*Math.PI*2, y=Math.cos(t), wave=1+shape*.035*(Math.sin(a*5+t*7)+Math.sin(a*9-t*4)); const taper=1+shape*.28*y;
+          const x=radii[0]*Math.sin(t)*Math.cos(a)*taper*wave, yy=radii[1]*y, z=radii[2]*Math.sin(t)*Math.sin(a)*taper*wave;
+          return add(center,[x*Math.cos(tilt)-yy*Math.sin(tilt),x*Math.sin(tilt)+yy*Math.cos(tilt),z]);},color,36,48);
+      }
+      // Catmull–Rom curves form the great vessels and coronary branches.
+      function curve(points,t){ const k=Math.max(0,Math.min(points.length-1.000001,t*(points.length-1))),i=Math.floor(k),u=k-i; const a=points[Math.max(0,i-1)],b=points[i],c=points[Math.min(points.length-1,i+1)],d=points[Math.min(points.length-1,i+2)]; return b.map((v,j)=>.5*((2*v)+(-a[j]+c[j])*u+(2*a[j]-5*v+4*c[j]-d[j])*u*u+(-a[j]+3*v-3*c[j]+d[j])*u*u*u)); }
+      function tube(points,r1,r2,color,open=false){
+        const frame=t=>{const p=curve(points,t),axis=unit(sub(curve(points,Math.min(1,t+.002)),curve(points,Math.max(0,t-.002)))), a=unit(cross(axis,Math.abs(axis[2])>.9?[1,0,0]:[0,0,1])), b=cross(axis,a); return [p,a,b,axis];};
+        surface((t,v)=>{const [p,a,b]=frame(t),angle=v*Math.PI*2,r=r1+(r2-r1)*t;return add(p,add(mul(a,r*Math.cos(angle)),mul(b,r*Math.sin(angle))));},color,Math.max(16,points.length*9),24);
+        if(open){const [p,a,b,axis]=frame(1);const end=add(p,mul(axis,.002)); const col=mul(color,.30); for(let i=0;i<32;i++){const angle=i*Math.PI/16,next=(i+1)*Math.PI/16; const rim=q=>add(end,add(mul(a,r2*.83*Math.cos(q)),mul(b,r2*.83*Math.sin(q)))); for(const v of [end,rim(angle),rim(next)])vertices.push(...v,...axis,...col);}}
+      }
+      const muscle=[.64,.27,.21], right=[.57,.22,.18], atrium=[.55,.25,.23], arterial=[.72,.31,.25], venous=[.43,.34,.44], fat=[.80,.58,.34];
+      lobe([.15,-.28,0],[.70,.92,.53],muscle,1,-.31);
+      lobe([-.26,-.15,.20],[.52,.68,.40],right,.8,.18);
+      lobe([-.47,.42,-.05],[.40,.38,.36],atrium,.8,.12);
+      lobe([.44,.46,-.15],[.42,.34,.36],[.66,.30,.25],.8,-.2);
+      lobe([-.44,.51,.34],[.30,.19,.20],right,1,.25);
+      lobe([.47,.53,.29],[.30,.18,.19],muscle,1,-.4);
+      tube([[.12,.38,-.23],[.03,.88,-.24],[.14,1.20,-.23],[.43,1.25,-.30],[.64,1.04,-.36]],.22,.18,arterial,true);
+      tube([[.12,1.14,-.24],[.03,1.40,-.24],[-.02,1.57,-.21]],.11,.085,arterial,true);
+      tube([[.29,1.21,-.29],[.27,1.48,-.32]],.087,.072,arterial,true);
+      tube([[.43,1.18,-.30],[.53,1.44,-.36]],.078,.062,arterial,true);
+      tube([[-.13,.35,.22],[-.19,.73,.26],[-.31,.99,.14],[-.52,1.02,.02],[-.73,.92,-.12]],.21,.15,venous,true);
+      tube([[-.60,.38,-.20],[-.68,.77,-.24],[-.62,1.23,-.23]],.17,.145,[.48,.37,.42],true);
+      tube([[-.48,.22,-.24],[-.55,-.23,-.31],[-.49,-.49,-.30]],.155,.13,venous,true);
+      tube([[.38,.44,-.33],[.74,.64,-.34],[.91,.65,-.40]],.115,.09,arterial,true);
+      tube([[.38,.28,-.38],[.73,.27,-.39],[.89,.27,-.42]],.105,.08,arterial,true);
+      // Coronary grooves, fatty tissue and branching arteries on the front.
+      const groove=[[-.05,.54,.46],[.02,.30,.56],[.10,.04,.59],[.20,-.26,.57],[.30,-.55,.47],[.40,-.82,.31]];
+      tube(groove,.064,.027,fat); tube(groove.map(p=>add(p,[.022,0,.043])),.029,.012,[.57,.14,.12]);
+      tube([[-.02,.31,.59],[-.23,.19,.60],[-.43,.01,.54],[-.55,-.19,.43]],.035,.009,[.67,.21,.15]);
+      tube([[.13,.03,.63],[.35,-.06,.58],[.54,-.25,.49],[.59,-.45,.36]],.025,.007,[.64,.19,.13]);
+      tube([[.23,-.31,.58],[.06,-.43,.52],[-.07,-.60,.45],[-.11,-.76,.30]],.02,.008,[.62,.18,.13]);
+      tube([[-.56,.34,.34],[-.31,.39,.47],[-.01,.40,.48],[.31,.44,.50],[.60,.32,.35]],.049,.023,fat);
+      tube([[-.56,.35,.37],[-.31,.41,.51],[-.01,.42,.53],[.31,.46,.53],[.60,.34,.37]],.023,.01,[.61,.20,.16]);
+      tube([[.16,.22,-.52],[.21,-.07,-.56],[.31,-.36,-.48],[.41,-.66,-.33]],.028,.009,[.53,.17,.14]);
+      const mesh=new Float32Array(vertices);
+      let rot,aspect,zoomU;
+      if(gl){
+        const buffer=gl.createBuffer();gl.bindBuffer(gl.ARRAY_BUFFER,buffer);gl.bufferData(gl.ARRAY_BUFFER,mesh,gl.STATIC_DRAW);
+        ['p','n','c'].forEach((name,i)=>{const loc=gl.getAttribLocation(program,name);gl.enableVertexAttribArray(loc);gl.vertexAttribPointer(loc,3,gl.FLOAT,false,36,i*12);});
+        rot=gl.getUniformLocation(program,'rot');aspect=gl.getUniformLocation(program,'aspect');zoomU=gl.getUniformLocation(program,'zoom');
+        gl.enable(gl.DEPTH_TEST);gl.clearColor(0,0,0,0);
+      }
+      let yaw=-.19,pitch=.04,zoom=.49,drag=null,frame=0;
+      function draw(){
+        frame=0;const w=canvas.clientWidth,h=canvas.clientHeight;if(!w||!h)return;const d=Math.min(devicePixelRatio||1,2);canvas.width=Math.round(w*d);canvas.height=Math.round(h*d);
+        if(gl){gl.viewport(0,0,canvas.width,canvas.height);gl.clear(gl.COLOR_BUFFER_BIT|gl.DEPTH_BUFFER_BIT);gl.uniform2f(rot,yaw,pitch);gl.uniform2f(aspect,Math.min(1,h/w),Math.min(1,w/h));gl.uniform1f(zoomU,zoom);gl.drawArrays(gl.TRIANGLES,0,mesh.length/9);return;}
+        // Software 3D rendering for browsers with WebGL disabled.
+        const a=Math.cos(yaw),b=Math.sin(yaw),c=Math.cos(pitch),e=Math.sin(pitch), k=Math.min(w,h)*zoom/2;
+        const turn=(x,y,z)=>[a*x+b*z,c*y-e*(-b*x+a*z),e*y+c*(-b*x+a*z)];
+        const faces=[], light=unit([-.55,.9,1.3]);
+        for(let i=0;i<mesh.length;i+=27){
+          const pts=[0,9,18].map(j=>turn(mesh[i+j],mesh[i+j+1],mesh[i+j+2]));
+          const n=unit([0,9,18].reduce((sum,j)=>add(sum,turn(mesh[i+j+3],mesh[i+j+4],mesh[i+j+5])),[0,0,0]));
+          if(n[2]<-.13)continue;
+          const diffuse=Math.max(0,n.reduce((sum,v,j)=>sum+v*light[j],0)), shade=.53+.58*diffuse;
+          const color=[6,7,8].map(j=>Math.round(255*Math.min(1,mesh[i+j]*shade)));
+          faces.push({pts,z:pts.reduce((sum,p)=>sum+p[2],0)/3,color:`rgb(${color.join(',')})`});
+        }
+        faces.sort((a,b)=>a.z-b.z);ctx.scale(d,d);ctx.lineWidth=.65;ctx.lineJoin='round';
+        for(const f of faces){ctx.beginPath();for(let i=0;i<3;i++){const p=f.pts[i];ctx[i?'lineTo':'moveTo'](w/2+p[0]*k,h/2-p[1]*k);}ctx.closePath();ctx.fillStyle=ctx.strokeStyle=f.color;ctx.fill();ctx.stroke();}
+      }
+      const request=()=>{if(!frame)frame=requestAnimationFrame(draw);};
+      const pointers=new Map(); let pinch=0;
+      canvas.addEventListener('pointerdown',e=>{canvas.setPointerCapture(e.pointerId);pointers.set(e.pointerId,[e.clientX,e.clientY]);drag=[e.clientX,e.clientY];canvas.style.cursor='grabbing';if(pointers.size===2){const [a,b]=pointers.values();pinch=Math.hypot(...sub(a,b));}});
+      canvas.addEventListener('pointermove',e=>{if(!pointers.has(e.pointerId))return;pointers.set(e.pointerId,[e.clientX,e.clientY]);if(pointers.size===2){const [a,b]=pointers.values(),distance=Math.hypot(...sub(a,b));if(pinch)zoom=Math.max(.27,Math.min(1.25,zoom*distance/pinch));pinch=distance;}else if(drag){yaw+=(e.clientX-drag[0])*.012;pitch=Math.max(-1.4,Math.min(1.4,pitch+(e.clientY-drag[1])*.012));}drag=[e.clientX,e.clientY];request();});
+      function release(e){pointers.delete(e.pointerId);pinch=0;drag=pointers.size?[...pointers.values()][0]:null;if(!drag)canvas.style.cursor='grab';}
+      canvas.addEventListener('pointerup',release);canvas.addEventListener('pointercancel',release);
+      canvas.addEventListener('wheel',e=>{e.preventDefault();zoom=Math.max(.27,Math.min(1.25,zoom*Math.exp(-e.deltaY*.0015)));request();},{passive:false});
+      canvas.addEventListener('dblclick',()=>{yaw=-.19;pitch=.04;zoom=.49;request();});
+      canvas.addEventListener('keydown',e=>{if(!['ArrowLeft','ArrowRight','ArrowUp','ArrowDown','+','-','=','0'].includes(e.key))return;e.preventDefault();if(e.key==='ArrowLeft')yaw-=.15;if(e.key==='ArrowRight')yaw+=.15;if(e.key==='ArrowUp')pitch-=.12;if(e.key==='ArrowDown')pitch+=.12;if(e.key==='+'||e.key==='=')zoom=Math.min(1.25,zoom*1.1);if(e.key==='-')zoom=Math.max(.27,zoom/1.1);if(e.key==='0'){yaw=-.19;pitch=.04;zoom=.49;}request();});
+      new ResizeObserver(request).observe(canvas);request();
+    })();
+
+    render();
+  </script>
+</body>
+</html>
